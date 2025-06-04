@@ -39,7 +39,7 @@ export async function updateSession(request: NextRequest) {
   }
 
   // If there's no user, redirect to the login page
-  if (!user && pathname !== "/login" && pathname !== "/signup") {
+  if (!user && pathname !== "/login" && pathname !== "/signup" && pathname !== "/auth/callback") {
     const url = request.nextUrl.clone()
     url.pathname = "/login"
     return NextResponse.redirect(url)
