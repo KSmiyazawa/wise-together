@@ -44,7 +44,7 @@ export default function LoginPage() {
       if (error) setError(error.message);
     } catch (error) {
       console.error("An error occured during login: ", error);
-      setError("We couldn’t sign you in with Google. Please try again later or use your email instead..");
+      setError("We couldn’t sign you in with Google. Please try again later or use your email instead.");
     }
   }
 
