@@ -9,23 +9,41 @@ import {
 import { LogOut } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
 import { useSidebar } from "./ui/sidebar"
+import { signOut } from "@/lib/auth/authentication"
+import { useRouter } from "next/navigation"
+import { User } from "./header"
 
-export default function UserDropdownMenu({ user }: {
-  user: {
-    name:string,
-    email: string,
-    avatar: string
+interface Props {
+  user: User
+}
+
+export default function UserDropdownMenu({ user }: Props) {
+
+  const { isMobile } = useSidebar();
+  const router = useRouter();
+
+  async function handleLogout() {
+    try {
+      await signOut();
+      router.replace("/dashboard");
+    } catch (error) {
+      console.error("Sign-out failed: ", error);
+    }
   }
-}) {
 
-  const { isMobile } = useSidebar()
+  const getInitials = (name: string) => {
+    const words = name.trim().split(" ");
+    const first = words[0]?.[0] || "";
+    const second = words[1]?.[0] || "";
+    return (first + second).toUpperCase();
+  }
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Avatar className="h-8 w-8 rounded-lg grayscale">
           <AvatarImage src={user.avatar} alt={user.name} />
-          <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+          <AvatarFallback className="rounded-lg">{getInitials(user.name)}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent
@@ -38,7 +56,7 @@ export default function UserDropdownMenu({ user }: {
           <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
             <Avatar className="h-8 w-8 rounded-lg">
               <AvatarImage src={user.avatar} alt={user.name} />
-              <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+              <AvatarFallback className="rounded-lg">{getInitials(user.name)}</AvatarFallback>
             </Avatar>
             <div className="grid flex-1 text-left text-sm leading-tight">
               <span className="truncate font-medium">{user.name}</span>
@@ -47,7 +65,7 @@ export default function UserDropdownMenu({ user }: {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={handleLogout}>
           <LogOut />
           Log out
         </DropdownMenuItem>

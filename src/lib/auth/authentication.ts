@@ -16,6 +16,18 @@ export async function loginWithGoogle() {
     });
 }
 
-export async function signUpWithEmail({ email, password }: SignUpFormData) {
-  return await supabase.auth.signUp({ email, password });
+export async function signUpWithEmail({ email, password, name }: SignUpFormData) {
+  return await supabase.auth.signUp({ 
+    email, 
+    password,
+    options: {
+      data: {
+        full_name: name,
+      }
+    }
+  });
+}
+
+export async function signOut() {
+  return await supabase.auth.signOut();
 }
